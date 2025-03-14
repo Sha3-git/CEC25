@@ -1,0 +1,77 @@
+name: Deploy MERN App to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # Deploy only when changes are pushed to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Set CI to false
+        run: echo "CI=false" >> $GITHUB_ENV
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.16.0' 
+
+      # Step 3: Install Dependencies
+      - name: Install Dependencies
+        working-directory: client
+        run: npm install
+
+      - name: Install Server Dependencies
+        working-directory: server 
+        run: npm install
+
+      # Step 4: Build the React App
+      - name: Build Frontend
+        working-directory: ./client
+        run: npm run build
+
+      # Step 5: Configure Deployment to DigitalOcean Droplet
+      - name: Deploy Backend and Frontend to DigitalOcean
+        env:
+          HOST: ${{ secrets.DROPLET_IP }} 
+          USER: ${{ secrets.DROPLET_USER }} 
+          PRIVATE_KEY: ${{ secrets.DROPLET_PRIVATE_KEY }} 
+        run: |
+          # Add SSH key
+          echo "${PRIVATE_KEY}" > private_key
+          chmod 600 private_key
+          ssh -i private_key -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+            # Update Droplet maybeee (nvm too much for a 1 day project dnc)
+            # sudo apt-get update && sudo apt-get upgrade -y
+            
+            # Navigate to deployment directory
+            cd /var/www/WEC25 || exit
+
+            # Clean untracked files (removes .env and package-lock.json)
+            git clean -f client/.env server/package-lock.json
+
+            # Pull latest changes from GitHub
+            git pull origin main
+
+            # Recreate .env file for the server
+            cd server
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
+
+            # Install backend dependencies
+            # cd server && npm install && cd ..
+            npm install && cd ..
+
+            cd client && npm install && npm run build && cd ..
+
+            # Restart backend server 
+            pm2 restart server || pm2 start server/index.js --name "server"
+          EOF
