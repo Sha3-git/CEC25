@@ -2,7 +2,7 @@
 export default function Predict() {
   return (
     <>
-    <div className="container mt-auto">
+    <div className="container"style={{ height: "100vh" }}>
         Hello
     </div>
     </>

@@ -75,7 +75,9 @@ jobs:
 
 
             # Navigate back to flask-server and activate virtual environment
-            cd flask-server && python3 -m venv venv && source venv/bin/activate && TMPDIR=/root/pipcache pip install --no-cache-dir flask torch torchvision torchaudio && nohup python3 server.py &
+            cd flask-server && python3 -m venv venv && source venv/bin/activate && TMPDIR=/root/pipcache pip install --no-cache-dir flask torch torchvision torchaudio && 
+            pm2 start server.py --name "flask-server" || pm2 restart flask-server
+            cd ..
             
             cd client && npm install && npm run build && cd ..
 
