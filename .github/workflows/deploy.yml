@@ -23,19 +23,6 @@ jobs:
         with:
           node-version: '20.16.0' 
 
-      # Step 3: Install Dependencies
-      - name: Install Dependencies
-        working-directory: client
-        run: npm install
-
-      - name: Install Server Dependencies
-        working-directory: server 
-        run: npm install
-
-      # Step 4: Build the React App
-      - name: Build Frontend
-        working-directory: ./client
-        run: npm run build
 
       # Step 5: Configure Deployment to DigitalOcean Droplet
       - name: Deploy Backend and Frontend to DigitalOcean
@@ -73,9 +60,9 @@ jobs:
             cd client && npm install && npm run build && cd ..
 
             # Restart backend server 
-            pm2 restart server || pm2 start server/index.js --name "server"
+            pm2 restart cec-server || pm2 start server/index.js --name "cec-server"
 
-                        sudo rm -rf /tmp/*
+            sudo rm -rf /tmp/*
             pip cache purge
 
 
