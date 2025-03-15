@@ -1,3 +1,4 @@
+//ChatGPT was utilized to refine, format, setup of flask server, and debug this code
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useDropzone } from "react-dropzone";

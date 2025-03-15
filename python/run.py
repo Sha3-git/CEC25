@@ -1,3 +1,4 @@
+# ChatGPT was utilized to refine, format, setup of flask server, and debug this code
 import torch
 import torch.nn as nn
 from torchvision import models, transforms

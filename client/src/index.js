@@ -1,3 +1,4 @@
+//ChatGPT was utilized to refine, format, setup of flask server, and debug this code
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

@@ -1,3 +1,4 @@
+//ChatGPT was utilized to refine, format, setup of flask server, and debug this code
 import DragDropUploader from "../components/DragDropUploader"
 import { Box, Button, Snackbar, Alert, LinearProgress, Card, CardContent, Typography, CircularProgress } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
