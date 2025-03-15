@@ -36,7 +36,7 @@ export default function Predict() {
         }
 
         try {
-            const response = await axios.post("http://localhost:5001/predict", formData, {
+            const response = await axios.post("https://cec.kosichi.ca/predict", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

@@ -6,6 +6,8 @@ This project is a deep learning-based tumor detection system using PyTorch and E
 
 Before running this project, you need to have the following installed:
 
+- Works on Macbook Sequoia 15.3.2 using an Intel Core i5, and Windows Machine with Intel Core i7
+
 - Python 3.9.21 or 3.11.3
 - PyTorch 2.1.0
 - torchvision 0.16.0
@@ -24,12 +26,20 @@ pip install -r requirements.txt
 This project requires setting an environment variable to locate your dataset:
 
 ```bash
-# On Windows
+# Windows (Command Prompt)
 set CEC_2025_dataset=path\to\your\dataset
 
-# On macOS/Linux
+# Windows (PowerShell)
+$env:CEC_2025_dataset = "C:\full\path\to\your\dataset"
+
+# macOS/Linux
 export CEC_2025_dataset=/path/to/your/dataset
 ```
+
+Important Notes:
+1. Use the FULL path to your dataset directory
+2. The path should point to the parent directory containing the `yes`, `no`, and `CEC_test` folders
+3. In PowerShell, the environment variable will only persist for the current session
 
 The script will use this environment variable to find your dataset directory.
 
@@ -82,7 +92,26 @@ sequenceDiagram
     run.py->>User: Save results to output.csv
     run.py->>User: Display average confidence score
 ```
+## Setting up the Environment for the Model
 
+1. Clone the repository to your local machine.
+
+2. Open a command terminal and navigate to the `python` folder.
+
+3. Install the required dependencies by running:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. You can now start training the model by running:
+   ```bash
+   python train.py
+   ```
+
+   Alternatively, to run the test script, execute:
+   ```bash
+   python run.py
+   ```
 ## Running the Model
 
 To run the model on the CEC_test dataset (after setting environment var.):
@@ -156,7 +185,7 @@ The confidence score interpretation:
 
 ## Troubleshooting
 
-### Virtual Environment Setup
+## Virtual Environment Setup
 
 It's recommended to use a virtual environment to avoid package conflicts. Here's how to set it up:
 
