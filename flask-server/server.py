@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
@@ -6,6 +7,7 @@ from PIL import Image
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 # Define the model architecture (same as training)
 class MyModel(nn.Module):
@@ -27,8 +29,7 @@ if not os.path.exists(model_path):
 
 # Load the model to the appropriate device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#model.load_state_dict(torch.load(model_path, map_location=device, weights_only=False))
-model = torch.load(model_path, map_location=device,  weights_only=False)
+model = torch.load(model_path, map_location=device, weights_only=False)
 model.to(device)
 model.eval()
 
@@ -36,7 +37,7 @@ model.eval()
 transform = transforms.Compose([
     transforms.Resize((224, 224)),  # Resize to match EfficientNetV2 input size
     transforms.Grayscale(num_output_channels=3),  # Convert grayscale to RGB
-    transforms.ToTensor(),  
+    transforms.ToTensor(),
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])  
 ])
 
@@ -57,13 +58,14 @@ def predict():
         # Predict
         with torch.no_grad():
             outputs = model(img)
-            _, predicted = torch.max(outputs, 1)
+            probabilities = torch.nn.functional.softmax(outputs, dim=1)  # Get the probabilities
+            confidence, predicted = torch.max(probabilities, 1)  # Get the max probability and predicted class
 
         # Map the result
         label = 'yes' if predicted.item() == 1 else 'no'
 
-        return jsonify({'prediction': label})
-    
+        return jsonify({'prediction': label, 'confidence': confidence.item()})
+
     except Exception as e:
         return jsonify({'error': str(e)})
 

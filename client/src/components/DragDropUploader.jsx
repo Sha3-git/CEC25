@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import { Box, Typography, Snackbar, Alert } from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
 import { useDropzone } from "react-dropzone";
 
-export default function DragDropUploader() {
-  const [image, setImage] = useState(null);
-  const [error, setError] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+export default function DragDropUploader({ setImage, image, setOpenSnackbar, setError }) {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
 
     // Check if the file is a PNG image
     if (file && file.type === "image/png") {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // Set the image preview
-        setError(""); // Clear any previous errors
-        setOpenSnackbar(true); // Show success message
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file); // Create image URL for preview
+      setImage({ file, imageUrl });  // Set both file and image URL
+      setError("");  // Clear any previous errors
+      setOpenSnackbar(true);  // Show success message
     } else {
       setError("Only PNG images are allowed!");
-      setOpenSnackbar(true); // Show error message
+      setOpenSnackbar(true);  // Show error message
     }
   };
 
@@ -67,21 +61,8 @@ export default function DragDropUploader() {
           Or click to select one
         </Typography>
       </Box>
-      {image && (
-        <Box mt={2}>
-          <img src={image} alt="Uploaded Preview" style={{ maxWidth: "100%" }} />
-        </Box>
-      )}
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={() => setOpenSnackbar(false)}
-      >
-        <Alert severity={error ? "error" : "success"} onClose={() => setOpenSnackbar(false)}>
-          {error || "Image uploaded successfully!"}
-        </Alert>
-      </Snackbar>
+  
     </Box>
   );
 }
