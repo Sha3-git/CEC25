@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import csv
 
+# Get the route to the dataset
 data_dir = os.getenv('CEC_2025_dataset')
 
 transform = transforms.Compose([
@@ -43,10 +44,12 @@ def predict_image(image_path):
 
         return predicted.item(), confidence.item()
 
-def test_random_images(root_dir):
+def test_images_in_order(root_dir):
     cec_test_folder = os.path.join(root_dir, "CEC_test")
-    cec_test_images = [os.path.join(cec_test_folder, f) for f in os.listdir(cec_test_folder) if f.lower().endswith(('png', 'jpg', 'jpeg'))]
-    
+    cec_test_images = sorted(
+        [os.path.join(cec_test_folder, f) for f in os.listdir(cec_test_folder) if f.lower().endswith(('png', 'jpg', 'jpeg'))]
+    )  # Ensures images are processed in order
+
     total = 0
     confidence_scores = []
 
@@ -71,6 +74,6 @@ def test_random_images(root_dir):
     
 if data_dir:
     print(f"Using dataset directory: {data_dir}")
-    test_random_images(data_dir)
+    test_images_in_order(data_dir)
 else:
     print("Environment variable CEC_2025_dataset is not set. Please set it to the path of your dataset.")

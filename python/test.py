@@ -6,7 +6,7 @@ import os
 import random
 
 # nmber of image to test with
-NUM_IMAGES = 1000
+NUM_IMAGES = 100
 
 # similar as training to make consistent
 # again, make tensors switch to RGB
