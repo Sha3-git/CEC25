@@ -85,7 +85,7 @@ sequenceDiagram
 
 ## Running the Model
 
-To run the model on the CEC_test dataset:
+To run the model on the CEC_test dataset (after setting environment var.):
 
 ```bash
 python run.py
@@ -95,7 +95,7 @@ The run script will:
 1. Load the trained model from `final_model.pth` file
 2. Process all images in the `CEC_test` folder
 3. Generate predictions with confidence scores
-4. Save results to `output.csv`
+4. Save results to `output.csv` in same directory as script
 
 ## Additional Scripts
 
