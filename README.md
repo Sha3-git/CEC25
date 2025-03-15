@@ -6,6 +6,8 @@ This project is a deep learning-based tumor detection system using PyTorch and E
 
 Before running this project, you need to have the following installed:
 
+- Works on Macbook Sequoia 15.3.2 using an Intel Core i5, and Windows Machine with Intel Core i7
+
 - Python 3.9.21 or 3.11.3
 - PyTorch 2.1.0
 - torchvision 0.16.0
