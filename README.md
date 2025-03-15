@@ -95,14 +95,8 @@ sequenceDiagram
 ## Setting up the Environment for the Model
 
 1. Clone the repository to your local machine.
-   ```bash
-   git clone <repository_url>
-   ```
 
 2. Open a command terminal and navigate to the `python` folder.
-   ```bash
-   cd path/to/python/folder
-   ```
 
 3. Install the required dependencies by running:
    ```bash
