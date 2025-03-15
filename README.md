@@ -156,11 +156,50 @@ The confidence score interpretation:
 
 ## Troubleshooting
 
+### Virtual Environment Setup
+
+It's recommended to use a virtual environment to avoid package conflicts. Here's how to set it up:
+
+1. Create a new virtual environment:
+```bash
+# Windows
+python -m venv venv
+
+# macOS/Linux
+python3 -m venv venv
+```
+
+2. Activate the virtual environment:
+```bash
+# Windows (Command Prompt)
+venv\Scripts\activate.bat
+
+# Windows (PowerShell)
+venv\Scripts\Activate.ps1
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+3. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
+
+4. When you're done, you can deactivate the virtual environment:
+```bash
+deactivate
+```
+
+### PyTorch Installation Issues
+
 If you encounter PyTorch compatibility issues, make sure you have Python 3.9 and PyTorch 2.1.0 installed. For newer Python versions, you may need to use the latest pre-release version of PyTorch:
 
 ```bash
 pip install --pre torch torchvision torchaudio
 ```
+
+### Dataset Issues
 
 If the scripts cannot find the dataset, verify that:
 1. The environment variable `CEC_2025_dataset` is correctly set
