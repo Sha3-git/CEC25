@@ -52,7 +52,7 @@ jobs:
             # sudo apt-get update && sudo apt-get upgrade -y
             
             # Navigate to deployment directory
-            cd /var/www/WEC25 || exit
+            cd /var/www/CEC25 || exit
 
             # Clean untracked files (removes .env and package-lock.json)
             git clean -f client/.env server/package-lock.json
@@ -69,7 +69,16 @@ jobs:
             # Install backend dependencies
             # cd server && npm install && cd ..
             npm install && cd ..
+            
+            sudo rm -rf /tmp/*
+            pip cache purge
 
+
+            # Navigate back to flask-server and activate virtual environment
+            cd flask-server && python3 -m venv venv && source venv/bin/activate && TMPDIR=/root/pipcache pip install --no-cache-dir flask torch torchvision torchaudio && 
+            pm2 start server.py --name "flask-server" || pm2 restart flask-server
+            cd ..
+            
             cd client && npm install && npm run build && cd ..
 
             # Restart backend server 
