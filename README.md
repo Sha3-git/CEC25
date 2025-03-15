@@ -58,7 +58,24 @@ CEC_2025_dataset/
 - The `no` folder contains MRI images without tumors
 - The `CEC_test` folder contains test images for prediction
 
-## Testing the Model
+## Running the Model
+
+To run the model on the CEC_test dataset:
+
+```bash
+python run.py
+```
+
+The run script will:
+1. Load the trained model from `final_model.pth` file
+2. Process all images in the `CEC_test` folder
+3. Generate predictions with confidence scores
+4. Save results to `output.csv`
+
+## Additional Scripts
+
+<details>
+<summary><b>Testing the Model (test.py)</b></summary>
 
 To test the model's performance on the CEC_test dataset:
 
@@ -73,25 +90,10 @@ The test script will:
 4. Save results to `output.csv`
 
 You can modify `NUM_IMAGES` in `test.py` to change the number of test images (default: 50).
+</details>
 
-## Understanding the Results
-
-After running the test script, you will see:
-- A CSV file (`output.csv`) containing:
-  - File name
-  - Prediction (Yes/No)
-  - Confidence score (0-1)
-  - Probability classification (Very Unlikely, Unlikely, Likely, Very Likely)
-- Average confidence score across all tested images
-- Total number of images tested
-
-The confidence score interpretation:
-- < 0.25: Very Unlikely
-- 0.25-0.5: Unlikely
-- 0.5-0.75: Likely
-- > 0.75: Very Likely
-
-## Training the Model
+<details>
+<summary><b>Training the Model (train.py)</b></summary>
 
 To train the model, run:
 
@@ -108,10 +110,28 @@ You can modify the following parameters in `train.py`:
 - `NUM_IMAGES`: Number of images to use for training
 - `MODEL_NAME`: Name of the saved model file
 - `epochs`: Number of training epochs
+</details>
+
+## Understanding the Results
+
+After running the script, you will see:
+- A CSV file (`output.csv`) containing:
+  - File name
+  - Prediction (Yes/No)
+  - Confidence score (0-1)
+  - Probability classification (Very Unlikely, Unlikely, Likely, Very Likely)
+- Average confidence score across all tested images
+- Total number of images tested
+
+The confidence score interpretation:
+- < 0.25: Very Unlikely
+- 0.25-0.5: Unlikely
+- 0.5-0.75: Likely
+- > 0.75: Very Likely
 
 ## Troubleshooting
 
-If you encounter PyTorch compatibility issues, make sure you have Python 3.11+ and PyTorch 2.6.0+ installed. For Python 3.12, you may need to use the latest pre-release version of PyTorch:
+If you encounter PyTorch compatibility issues, make sure you have Python 3.9 and PyTorch 2.1.0 installed. For newer Python versions, you may need to use the latest pre-release version of PyTorch:
 
 ```bash
 pip install --pre torch torchvision torchaudio
