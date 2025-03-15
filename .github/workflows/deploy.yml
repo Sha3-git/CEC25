@@ -73,11 +73,9 @@ jobs:
             sudo rm -rf /tmp/*
             pip cache purge
 
-            # Set TMPDIR to a location with more space (using your larger volume)
-            TMPDIR=/mnt/volume_tor1_01 pip install flask torch torchvision torchaudio
 
             # Navigate back to flask-server and activate virtual environment
-            cd flask-server && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && nohup python3 server.py &
+            cd flask-server && python3 -m venv venv && source venv/bin/activate && TMPDIR=/mnt/volume_tor1_01 pip install flask torch torchvision torchaudio && nohup python3 server.py &
             
             cd client && npm install && npm run build && cd ..
 
