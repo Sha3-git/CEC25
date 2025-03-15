@@ -92,7 +92,32 @@ sequenceDiagram
     run.py->>User: Save results to output.csv
     run.py->>User: Display average confidence score
 ```
+## Setting up the Environment for the Model
 
+1. Clone the repository to your local machine.
+   ```bash
+   git clone <repository_url>
+   ```
+
+2. Open a command terminal and navigate to the `python` folder.
+   ```bash
+   cd path/to/python/folder
+   ```
+
+3. Install the required dependencies by running:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. You can now start training the model by running:
+   ```bash
+   python train.py
+   ```
+
+   Alternatively, to run the test script, execute:
+   ```bash
+   python run.py
+   ```
 ## Running the Model
 
 To run the model on the CEC_test dataset (after setting environment var.):
@@ -166,7 +191,7 @@ The confidence score interpretation:
 
 ## Troubleshooting
 
-### Virtual Environment Setup
+## Virtual Environment Setup
 
 It's recommended to use a virtual environment to avoid package conflicts. Here's how to set it up:
 
