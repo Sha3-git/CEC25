@@ -24,12 +24,20 @@ pip install -r requirements.txt
 This project requires setting an environment variable to locate your dataset:
 
 ```bash
-# On Windows
+# Windows (Command Prompt)
 set CEC_2025_dataset=path\to\your\dataset
 
-# On macOS/Linux
+# Windows (PowerShell)
+$env:CEC_2025_dataset = "C:\full\path\to\your\dataset"
+
+# macOS/Linux
 export CEC_2025_dataset=/path/to/your/dataset
 ```
+
+Important Notes:
+1. Use the FULL path to your dataset directory
+2. The path should point to the parent directory containing the `yes`, `no`, and `CEC_test` folders
+3. In PowerShell, the environment variable will only persist for the current session
 
 The script will use this environment variable to find your dataset directory.
 
