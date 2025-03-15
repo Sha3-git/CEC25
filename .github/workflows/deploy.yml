@@ -52,7 +52,7 @@ jobs:
             # sudo apt-get update && sudo apt-get upgrade -y
             
             # Navigate to deployment directory
-            cd /var/www/WEC25 || exit
+            cd /var/www/CEC25 || exit
 
             # Clean untracked files (removes .env and package-lock.json)
             git clean -f client/.env server/package-lock.json
