@@ -41,21 +41,12 @@ jobs:
             # Navigate to deployment directory
             cd /var/www/CEC25 || exit
 
-            # Clean untracked files (removes .env and package-lock.json)
-            git clean -f client/.env server/package-lock.json
+            # Clean untracked files 
+            git clean -f server/package-lock.json
 
             # Pull latest changes from GitHub
             git pull origin main
 
-            # Recreate .env file for the server
-            cd server
-            echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
-            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            echo "PORT=${{ secrets.PORT }}" >> .env
-
-            # Install backend dependencies
-            # cd server && npm install && cd ..
-            npm install && cd .
             
             cd client && npm install && npm run build && cd ..
 
