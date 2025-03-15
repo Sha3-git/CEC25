@@ -65,42 +65,22 @@ The following sequence diagram illustrates the workflow of the tumor detection s
 ```mermaid
 sequenceDiagram
     participant User
-    participant train.py
     participant run.py
-    participant test.py
     participant Model
     participant Dataset
 
-    User->>Dataset: Prepare dataset with yes/no folders
-    User->>train.py: Execute train.py
-    train.py->>Dataset: Load training images
-    train.py->>Model: Initialize EfficientNetV2
-    loop Training Process
-        train.py->>Model: Forward pass
-        Model-->>train.py: Loss calculation
-        train.py->>Model: Backward pass & update weights
-    end
-    train.py->>Model: Save trained model (final_model.pth)
-    train.py-->>User: Training complete
-
+    User->>User: Set CEC_2025_dataset environment variable
     User->>run.py: Execute run.py
-    run.py->>Model: Load trained model
-    run.py->>Dataset: Load test images from CEC_test
+    run.py->>Model: Load trained model (final_model.pth)
+    run.py->>Dataset: Load test images from CEC_test folder
     loop For each test image
-        run.py->>Model: Predict image
-        Model-->>run.py: Return prediction & confidence
-        run.py->>run.py: Classify probability
+        run.py->>Model: Process and predict image
+        Model-->>run.py: Return prediction & confidence score
+        run.py->>run.py: Classify probability (Very Unlikely to Very Likely)
+        run.py->>run.py: Add result to output data
     end
     run.py->>User: Save results to output.csv
-
-    User->>test.py: Execute test.py (optional)
-    test.py->>Model: Load trained model
-    test.py->>Dataset: Load random test images
-    loop For each test image
-        test.py->>Model: Predict image
-        Model-->>test.py: Return prediction
-    end
-    test.py->>User: Display accuracy statistics
+    run.py->>User: Display average confidence score
 ```
 
 ## Running the Model
