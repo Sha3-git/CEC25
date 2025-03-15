@@ -6,10 +6,11 @@ This project is a deep learning-based tumor detection system using PyTorch and E
 
 Before running this project, you need to have the following installed:
 
-- Python 3.11 or 3.12
-- PyTorch 2.6.0 or later
-- torchvision
-- Pillow (PIL)
+- Python 3.9 
+- PyTorch 2.1.0
+- torchvision 0.16.0
+- Pillow 10.0.0
+- numpy 1.24.0
 - Other dependencies listed in requirements.txt
 
 You can install the required packages using pip:
@@ -66,7 +67,7 @@ python test.py
 ```
 
 The test script will:
-1. Load the trained model from `tumor_model_1000.pth`
+1. Load the trained model from `final_model.pth` file
 2. Process all images in the `CEC_test` folder
 3. Generate predictions with confidence scores
 4. Save results to `output.csv`
