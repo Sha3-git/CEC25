@@ -69,8 +69,7 @@ jobs:
             # Install backend dependencies
             # cd server && npm install && cd ..
             npm install && cd ..
-            cd flask-server && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && nohup python3 server.py & && cd ..
-
+            cd flask-server && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && nohup python3 server.py & cd ..
             cd client && npm install && npm run build && cd ..
 
             # Restart backend server 
