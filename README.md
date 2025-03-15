@@ -1,0 +1,122 @@
+# Tumor Detection Model
+
+This project is a deep learning-based tumor detection system using PyTorch and EfficientNetV2. It trains a model to classify brain MRI images as either containing a tumor ("yes") or not ("no").
+
+## Prerequisites
+
+Before running this project, you need to have the following installed:
+
+- Python 3.11 or 3.12
+- PyTorch 2.6.0 or later
+- torchvision
+- Pillow (PIL)
+- Other dependencies listed in requirements.txt
+
+You can install the required packages using pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Environment Setup
+
+This project requires setting an environment variable to locate your dataset:
+
+```bash
+# On Windows
+set CEC_2025_dataset=path\to\your\dataset
+
+# On macOS/Linux
+export CEC_2025_dataset=/path/to/your/dataset
+```
+
+The script will use this environment variable to find your dataset directory.
+
+## Dataset Structure
+
+The dataset should be organized as follows:
+
+```
+CEC_2025_dataset/
+└── CEC_2025/
+    ├── yes/
+    │   ├── yes__001.png
+    │   ├── yes__002.png
+    │   └── ...
+    ├── no/
+    │   ├── no__001.png
+    │   ├── no__002.png
+    │   └── ...
+    └── CEC_test/
+        └── test_001.png
+        └── test_002.png
+        └── ...
+```
+
+- The `yes` folder contains MRI images with tumors
+- The `no` folder contains MRI images without tumors
+- The `CEC_test` folder contains test images for prediction
+
+## Testing the Model
+
+To test the model's performance on the CEC_test dataset:
+
+```bash
+python test.py
+```
+
+The test script will:
+1. Load the trained model from `tumor_model_1000.pth`
+2. Process all images in the `CEC_test` folder
+3. Generate predictions with confidence scores
+4. Save results to `output.csv`
+
+You can modify `NUM_IMAGES` in `test.py` to change the number of test images (default: 50).
+
+## Understanding the Results
+
+After running the test script, you will see:
+- A CSV file (`output.csv`) containing:
+  - File name
+  - Prediction (Yes/No)
+  - Confidence score (0-1)
+  - Probability classification (Very Unlikely, Unlikely, Likely, Very Likely)
+- Average confidence score across all tested images
+- Total number of images tested
+
+The confidence score interpretation:
+- < 0.25: Very Unlikely
+- 0.25-0.5: Unlikely
+- 0.5-0.75: Likely
+- > 0.75: Very Likely
+
+## Training the Model
+
+To train the model, run:
+
+```bash
+python train.py
+```
+
+The training script will:
+1. Load and preprocess the images from the `yes` and `no` folders
+2. Train an EfficientNetV2 model on these images
+3. Save the trained model as `tumor_model_1000.pth`
+
+You can modify the following parameters in `train.py`:
+- `NUM_IMAGES`: Number of images to use for training
+- `MODEL_NAME`: Name of the saved model file
+- `epochs`: Number of training epochs
+
+## Troubleshooting
+
+If you encounter PyTorch compatibility issues, make sure you have Python 3.11+ and PyTorch 2.6.0+ installed. For Python 3.12, you may need to use the latest pre-release version of PyTorch:
+
+```bash
+pip install --pre torch torchvision torchaudio
+```
+
+If the scripts cannot find the dataset, verify that:
+1. The environment variable `CEC_2025_dataset` is correctly set
+2. Your folder structure matches the one described above
+3. The images in the CEC_test folder are in a supported format (png, jpg, jpeg) 
