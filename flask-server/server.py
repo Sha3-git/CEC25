@@ -3,34 +3,41 @@ import torch
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
-import io
+import os
 
 app = Flask(__name__)
 
-# Define the model (same as the one used during training)
+# Define the model architecture (same as training)
 class MyModel(nn.Module):
     def __init__(self):
         super(MyModel, self).__init__()
-        # EfficientNetV2 pre-trained model
-        self.model = models.efficientnet_v2_s(weights="IMAGENET1K_V1")
-        # Adjust the final classification layer for 2 classes
+        self.model = models.efficientnet_v2_s(weights=None)  # No pretrained weights
         self.model.classifier[1] = nn.Linear(self.model.classifier[1].in_features, 2)
 
     def forward(self, x):
         return self.model(x)
 
-# Load the trained model
+# Load the model
 model = MyModel()
-model_path = '../model/tumor.pth'  # Go up one level, then into the 'model' folder
-model.load_state_dict(torch.load(model_path))  # Update with the correct path
-model.eval()  # Set the model to evaluation mode
 
-# Define the image transformation used during training
+# Load the trained model weights
+model_path = os.path.join(os.getcwd(), 'model', 'model_tumor_model_100_A.pth')
+if not os.path.exists(model_path):
+    raise FileNotFoundError(f"Model file not found: {model_path}")
+
+# Load the model to the appropriate device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#model.load_state_dict(torch.load(model_path, map_location=device, weights_only=False))
+model = torch.load(model_path, map_location=device,  weights_only=False)
+model.to(device)
+model.eval()
+
+# Image preprocessing
 transform = transforms.Compose([
     transforms.Resize((224, 224)),  # Resize to match EfficientNetV2 input size
     transforms.Grayscale(num_output_channels=3),  # Convert grayscale to RGB
-    transforms.ToTensor(),  # Convert image to tensor
-    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])  # Same normalization as training
+    transforms.ToTensor(),  
+    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])  
 ])
 
 @app.route('/predict', methods=['POST'])
@@ -42,21 +49,23 @@ def predict():
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
 
-    # Read the image from the file
-    img = Image.open(file.stream)
+    try:
+        # Load and preprocess the image
+        img = Image.open(file.stream)
+        img = transform(img).unsqueeze(0).to(device)
 
-    # Preprocess the image
-    img = transform(img).unsqueeze(0)  # Add batch dimension
+        # Predict
+        with torch.no_grad():
+            outputs = model(img)
+            _, predicted = torch.max(outputs, 1)
 
-    # Make prediction
-    with torch.no_grad():
-        outputs = model(img)
-        _, predicted = torch.max(outputs, 1)  # Get class with highest probability
+        # Map the result
+        label = 'yes' if predicted.item() == 1 else 'no'
 
-    # Map the output to your labels (e.g., 0 = 'no', 1 = 'yes')
-    label = 'yes' if predicted.item() == 1 else 'no'
-
-    return jsonify({'prediction': label})
+        return jsonify({'prediction': label})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)  # Run on port 5001
+    app.run(host='0.0.0.0', port=5001, debug=True)
