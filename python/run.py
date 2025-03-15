@@ -17,7 +17,7 @@ transform = transforms.Compose([
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.efficientnet_v2_s(weights="IMAGENET1K_V1") 
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 2)  
-model.load_state_dict(torch.load("tumor_model_1000.pth"))
+model.load_state_dict(torch.load("final_model.pth"))
 model.to(device)
 model.eval()  
 
