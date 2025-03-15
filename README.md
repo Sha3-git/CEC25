@@ -6,7 +6,7 @@ This project is a deep learning-based tumor detection system using PyTorch and E
 
 Before running this project, you need to have the following installed:
 
-- Python 3.9 
+- Python 3.9.21
 - PyTorch 2.1.0
 - torchvision 0.16.0
 - Pillow 10.0.0
@@ -149,10 +149,10 @@ After running the script, you will see:
 - Total number of images tested
 
 The confidence score interpretation:
-- < 0.25: Very Unlikely
-- 0.25-0.5: Unlikely
-- 0.5-0.75: Likely
-- > 0.75: Very Likely
+- < 0.5: Very Unlikely
+- 0.5-0.75: Unlikely
+- 0.75-0.9: Likely
+- > 0.9: Very Likely
 
 ## Troubleshooting
 
