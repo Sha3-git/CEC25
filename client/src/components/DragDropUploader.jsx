@@ -63,7 +63,7 @@ export default function DragDropUploader() {
       >
         <input {...getInputProps()} />
         <Typography variant="body1">Drag your PNG image here</Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="white">
           Or click to select one
         </Typography>
       </Box>
