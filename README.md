@@ -6,10 +6,11 @@ This project is a deep learning-based tumor detection system using PyTorch and E
 
 Before running this project, you need to have the following installed:
 
-- Python 3.11 or 3.12
-- PyTorch 2.6.0 or later
-- torchvision
-- Pillow (PIL)
+- Python 3.9.21 or 3.11.3
+- PyTorch 2.1.0
+- torchvision 0.16.0
+- Pillow 10.0.0
+- numpy 1.24.0
 - Other dependencies listed in requirements.txt
 
 You can install the required packages using pip:
@@ -57,7 +58,49 @@ CEC_2025_dataset/
 - The `no` folder contains MRI images without tumors
 - The `CEC_test` folder contains test images for prediction
 
-## Testing the Model
+## Workflow Sequence Diagram
+
+The following sequence diagram illustrates the workflow of the tumor detection system:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant run.py
+    participant Model
+    participant Dataset
+
+    User->>User: Set CEC_2025_dataset environment variable
+    User->>run.py: Execute run.py
+    run.py->>Model: Load trained model (final_model.pth)
+    run.py->>Dataset: Load test images from CEC_test folder
+    loop For each test image
+        run.py->>Model: Process and predict image
+        Model-->>run.py: Return prediction & confidence score
+        run.py->>run.py: Classify probability (Very Unlikely to Very Likely)
+        run.py->>run.py: Add result to output data
+    end
+    run.py->>User: Save results to output.csv
+    run.py->>User: Display average confidence score
+```
+
+## Running the Model
+
+To run the model on the CEC_test dataset (after setting environment var.):
+
+```bash
+python run.py
+```
+
+The run script will:
+1. Load the trained model from `final_model.pth` file
+2. Process all images in the `CEC_test` folder
+3. Generate predictions with confidence scores
+4. Save results to `output.csv` in same directory as script
+
+## Additional Scripts
+
+<details>
+<summary><b>Testing the Model (test.py)</b></summary>
 
 To test the model's performance on the CEC_test dataset:
 
@@ -66,31 +109,16 @@ python test.py
 ```
 
 The test script will:
-1. Load the trained model from `tumor_model_1000.pth`
+1. Load the trained model from `final_model.pth` file
 2. Process all images in the `CEC_test` folder
 3. Generate predictions with confidence scores
 4. Save results to `output.csv`
 
 You can modify `NUM_IMAGES` in `test.py` to change the number of test images (default: 50).
+</details>
 
-## Understanding the Results
-
-After running the test script, you will see:
-- A CSV file (`output.csv`) containing:
-  - File name
-  - Prediction (Yes/No)
-  - Confidence score (0-1)
-  - Probability classification (Very Unlikely, Unlikely, Likely, Very Likely)
-- Average confidence score across all tested images
-- Total number of images tested
-
-The confidence score interpretation:
-- < 0.25: Very Unlikely
-- 0.25-0.5: Unlikely
-- 0.5-0.75: Likely
-- > 0.75: Very Likely
-
-## Training the Model
+<details>
+<summary><b>Training the Model (train.py)</b></summary>
 
 To train the model, run:
 
@@ -107,14 +135,71 @@ You can modify the following parameters in `train.py`:
 - `NUM_IMAGES`: Number of images to use for training
 - `MODEL_NAME`: Name of the saved model file
 - `epochs`: Number of training epochs
+</details>
+
+## Understanding the Results
+
+After running the script, you will see:
+- A CSV file (`output.csv`) containing:
+  - File name
+  - Prediction (Yes/No)
+  - Confidence score (0-1)
+  - Probability classification (Very Unlikely, Unlikely, Likely, Very Likely)
+- Average confidence score across all tested images
+- Total number of images tested
+
+The confidence score interpretation:
+- < 0.5: Very Unlikely
+- 0.5-0.75: Unlikely
+- 0.75-0.9: Likely
+- > 0.9: Very Likely
 
 ## Troubleshooting
 
-If you encounter PyTorch compatibility issues, make sure you have Python 3.11+ and PyTorch 2.6.0+ installed. For Python 3.12, you may need to use the latest pre-release version of PyTorch:
+### Virtual Environment Setup
+
+It's recommended to use a virtual environment to avoid package conflicts. Here's how to set it up:
+
+1. Create a new virtual environment:
+```bash
+# Windows
+python -m venv venv
+
+# macOS/Linux
+python3 -m venv venv
+```
+
+2. Activate the virtual environment:
+```bash
+# Windows (Command Prompt)
+venv\Scripts\activate.bat
+
+# Windows (PowerShell)
+venv\Scripts\Activate.ps1
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+3. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
+
+4. When you're done, you can deactivate the virtual environment:
+```bash
+deactivate
+```
+
+### PyTorch Installation Issues
+
+If you encounter PyTorch compatibility issues, make sure you have Python 3.9 and PyTorch 2.1.0 installed. For newer Python versions, you may need to use the latest pre-release version of PyTorch:
 
 ```bash
 pip install --pre torch torchvision torchaudio
 ```
+
+### Dataset Issues
 
 If the scripts cannot find the dataset, verify that:
 1. The environment variable `CEC_2025_dataset` is correctly set

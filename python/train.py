@@ -72,13 +72,16 @@ class CustomImageFolder(Dataset):
 data_dir = "CEC_2025"
 # getting dataset with transforms and amount
 dataset = CustomImageFolder(root_dir=data_dir, transform=transform, num_samples=NUM_IMAGES) 
+# load 8 samples per batch, shuffle data on each epoch, pin memory speeds it up
 train_loader = DataLoader(dataset, batch_size=8, shuffle=True, pin_memory=True)
 
 # create the model object
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # we will use efficient net v2 - small (light)
+# ImageNet is a large-scale image dataset in image classification tasks
+# 1k refers to the fact that the dataset contains 1,000 different classes
 model = models.efficientnet_v2_s(weights="IMAGENET1K_V1") 
-# we want a binary yes or no classifier
+# we want a binary yes or no classifier at the final layer of the NN
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 2)
 # move to cpu or gpu
 model.to(device)
@@ -88,6 +91,7 @@ model.to(device)
 criterion = nn.CrossEntropyLoss() 
 # update parameters in training for a loss rate of 0.001
 # learning rate of 0.001 is often chosen as a good starting point for Adam optimizer.
+# also common for binary classifcation problems
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # precision scaler setup improves performances and prevents underflow during 

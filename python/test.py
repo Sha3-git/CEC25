@@ -6,7 +6,7 @@ import os
 import random
 
 # nmber of image to test with
-NUM_IMAGES = 5000 
+NUM_IMAGES = 1000
 
 # similar as training to make consistent
 # again, make tensors switch to RGB
@@ -26,7 +26,7 @@ model = models.efficientnet_v2_s(weights="IMAGENET1K_V1")
 # make it a binary problem
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 2)
 # define model path
-model.load_state_dict(torch.load("ss_tumor_model_750.pth"))
+model.load_state_dict(torch.load("final_model.pth"))
 # add to devile
 model.to(device)
 # make it eval mode to use
